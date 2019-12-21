@@ -1,36 +1,45 @@
 const formElement = document.querySelector(".js-form");
 const inputElement = formElement.querySelector("input");
 const grettingElement = document.querySelector(".js-gretting");
-
+let username = null;
 
 function init(){
-    formElement.addEventListener('keypress', enterHandler)
     loadUserName();
-}
 
+    formElement.addEventListener('keypress', enterHandler)
+}
 function loadUserName(){
-    const username = localStorage.getItem('username');
-    if( username == null )  {
-        grettingElement.classList.add('dis-none');
-    }else {
+    if( existUserNameLocalStorage() )  {
         inputElement.classList.add('dis-none');
         grettingElement.innerText = `Hello, ${username}`;
+    }else {
+        grettingElement.classList.add('dis-none');
     }
+}
+function existUserNameLocalStorage(){
+    username = localStorage.getItem('username');
+    if( username == null) return false;
+    else return true;
 }
 
 function enterHandler(e){
-   
-    const key = e.keyCode;
-    if( key != 13) return;
-    e.preventDefault()
+    if( e.key != 'Enter') return;
+    e.preventDefault();
 
     const summittedName = inputElement.value;
+    gretting(summittedName);
+}
+function gretting(summittedName){
+    if( summittedName == "") return ;
+
     grettingElement.innerText = `Hello, ${summittedName}`;
     grettingElement.classList.remove('dis-none');
     inputElement.classList.add('dis-none');
 
+    saveNameAtLocalStorage(summittedName);
+}
+function saveName(summittedName){
     localStorage.setItem('username', summittedName);
-
 }
 
 
