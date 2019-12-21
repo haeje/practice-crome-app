@@ -27,7 +27,7 @@ function loadTodoList(){
 
     todoListParsing.forEach(todo=>{
         todos.push(todo);
-        changeDom(todo);
+        makeTodoDOM(todo);
     });
 }
 function makeTodoDOM(todo){
