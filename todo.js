@@ -22,14 +22,15 @@ function idCounterCheck(){
 }
 function loadTodoList(){
     const todoListString = localStorage.getItem(todos_LS);
-    if( todoListString == []) return;
     const todoListParsing = JSON.parse(todoListString);
-    
     if( todoListParsing == null) return;
 
     todoListParsing.forEach(todo=>{
         todos.push(todo);
-
+        changeDom(todo);
+    });
+}
+function makeTodoDOM(todo){
         const tempLiTag = document.createElement("li");
         const tempBtnTag = document.createElement("button");
         const tempSpanTag = document.createElement("span");
@@ -42,53 +43,31 @@ function loadTodoList(){
         tempLiTag.id = todo.id;
         tempLiTag.append(tempBtnTag);
         todoList.append(tempLiTag);
-
-        
-    });
 }
+
 function handleDelete(event){
     const targetId = event.target.parentNode.id;
-
-    console.log(event);
-    
-    event.target.parentNode.remove();
-    
-    const cleanToDos = todos.filter(function(todo){
+    todos = todos.filter(function(todo){
         return todo.id !== parseInt(targetId);
     });
 
-    todos = cleanToDos;
     localStorage.setItem(todos_LS, JSON.stringify(todos));
+    
+    event.target.parentNode.remove();
 }
 
 function handleSubmit(event){
-
     event.preventDefault();
     const inputValue = todoValue.value;
-    
     if(inputValue == "") return;
-
-
-    const tempLiTag = document.createElement("li");
-    const tempBtnTag = document.createElement("button");
-    const tempSpanTag = document.createElement("span");
+    
     const nextId = idCount++;
-
-    tempBtnTag.addEventListener("click", handleDelete);
-    tempSpanTag.append(inputValue);
-    tempBtnTag.append(' x ');
-    tempLiTag.append(tempSpanTag);
-    tempLiTag.id = nextId;
-    tempLiTag.append(tempBtnTag);
-    todoList.append(tempLiTag);
-
-    
-    
     const todoObject = {
         id : nextId,
         contents : inputValue
     }
     todos.push(todoObject);
+    makeTodoDOM(todoObject);
 
     localStorage.setItem(todos_LS, JSON.stringify(todos));
     localStorage.setItem(idCount_LS, idCount);
